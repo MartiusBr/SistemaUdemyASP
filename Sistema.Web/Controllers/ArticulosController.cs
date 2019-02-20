@@ -26,7 +26,7 @@ namespace Sistema.Web.Controllers
         [HttpGet("[action]")]
         public async Task<IEnumerable<ArticuloViewModel>> Listar()
         {
-            var articulo = await _context.Articulos.Include(a => a.categoria).ToListAsync();
+            var articulo = await _context.Articulos.Include("categoria").ToListAsync();
 
             return articulo.Select(a => new ArticuloViewModel
             {
