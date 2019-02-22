@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sistema.Datos.Mapping.Almacen;
+using Sistema.Datos.Mapping.Usuarios;
 using Sistema.Entidades.Almacen;
+using Sistema.Entidades.Usuarios;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,6 +13,7 @@ namespace Sistema.Datos
     {
         public DbSet<Categoria> Categorias { get; set; }   //Exponiendo la coleccion categorias en el un objeto categorias
         public DbSet<Articulo> Articulos { get; set; }   //Exponiendo la coleccion articulos en el un objeto categorias
+        public DbSet<Rol> Roles { get; set; }
 
         public DbContextSistema(DbContextOptions<DbContextSistema> options) : base(options)
         {
@@ -22,7 +25,7 @@ namespace Sistema.Datos
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new CategoriaMap());
             modelBuilder.ApplyConfiguration(new ArticuloMap());
-
+            modelBuilder.ApplyConfiguration(new RolMap());
         }
     }
 }
