@@ -38,6 +38,20 @@ namespace Sistema.Web.Controllers
 
         }
 
+        // GET: api/Categorias/Listar
+        [HttpGet("[action]")]
+        public async Task<IEnumerable<SelectViewModel>> Select()
+        {
+            var categoria = await _context.Categorias.Where(c => c.condicion==true).ToListAsync();
+
+            return categoria.Select(c => new SelectViewModel
+            {
+                idcategoria = c.idcategoria,
+                nombre = c.nombre
+            });
+
+        }
+
         // GET: api/Categorias/Mostrar/1
         [HttpGet("[action]/{id}")]
         public async Task<IActionResult> Mostrar([FromRoute] int id)
