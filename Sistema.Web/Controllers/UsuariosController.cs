@@ -46,6 +46,60 @@ namespace Sistema.Web.Controllers
 
         }
 
+        // POST: api/Articulos/Crear
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Crear([FromBody] CrearViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var email = model.email.ToLower();
+
+            if (await _context.Usuarios.AnyAsync(u => u.email==email))
+            {
+                return BadRequest("El email ya existe");
+            }
+
+            CrearPasswordHash(model.password, out byte[] passwordHash, out byte[] passwordSalt);
+
+            Usuario usuario = new Usuario
+            {
+                idrol = model.idrol,
+                nombre = model.nombre,
+                tipo_documento = model.tipo_documento,
+                num_documento = model.num_documento,
+                direccion = model.direccion,
+                telefono = model.telefono,
+                email = model.email,
+                password_hash = passwordHash,
+                password_salt = passwordSalt,
+                condicion = true
+            };
+
+            _context.Usuarios.Add(usuario);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+        }
+
+        private void CrearPasswordHash(String password,out byte[] passwordHash,out byte[] passwordSalt)
+        {
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            }
+        }
+
         private bool UsuarioExists(int id)
         {
             return _context.Usuarios.Any(e => e.idusuario == id);
