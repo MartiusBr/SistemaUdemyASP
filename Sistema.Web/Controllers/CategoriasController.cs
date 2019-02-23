@@ -131,7 +131,7 @@ namespace Sistema.Web.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return BadRequest();
             }

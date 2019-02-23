@@ -90,7 +90,8 @@ namespace Sistema.Web.Controllers
 
             return Ok();
         }
-
+        
+        //ENCRYPT PASSWORD WITH PASSWORD  AND PASSWORDHASH & PASSWODSALT AS OUTPUT
         private void CrearPasswordHash(String password,out byte[] passwordHash,out byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
@@ -98,6 +99,119 @@ namespace Sistema.Web.Controllers
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
+        }
+
+        // PUT: api/Usuario/Actualizar
+        [HttpPut("[action]")]
+        public async Task<IActionResult> Actualizar([FromBody] ActualizarViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (model.idusuario <= 0)
+            {
+                return BadRequest();
+            }
+
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.idusuario == model.idusuario);
+
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            usuario.idrol = model.idrol;
+            usuario.nombre = model.nombre;
+            usuario.tipo_documento = model.tipo_documento;
+            usuario.num_documento = model.num_documento;
+            usuario.direccion = model.direccion;
+            usuario.telefono = model.telefono;
+            usuario.email = model.email.ToLower();
+
+            if (model.act_password == true)
+            {
+                CrearPasswordHash(model.password, out byte[] passwordHash, out byte[] passwordSalt);
+                usuario.password_hash = passwordHash;
+                usuario.password_salt = passwordSalt;
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                // Guardar Excepción
+                return BadRequest();
+            }
+
+            return Ok();
+        }
+
+        // PUT: api/Usuarios/Activar/1
+        [HttpPut("[action]/{id}")]
+        public async Task<IActionResult> Activar([FromRoute] int id)
+        {
+
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.idusuario == id);
+
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            usuario.condicion = true;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                // Guardar Excepción
+                return BadRequest();
+            }
+
+            return Ok();
+        }
+
+        // PUT: api/Usuarios/Desactivar/1
+        [HttpPut("[action]/{id}")]
+        public async Task<IActionResult> Desactivar([FromRoute] int id)
+        {
+
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.idusuario== id);
+
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            usuario.condicion = false;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                // Guardar Excepción
+                return BadRequest();
+            }
+
+            return Ok();
         }
 
         private bool UsuarioExists(int id)
