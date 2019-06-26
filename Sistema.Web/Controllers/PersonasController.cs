@@ -51,6 +51,7 @@ namespace Sistema.Web.Controllers
             return persona.Select(p => new PersonaViewModel
             {
                 idpersona = p.idpersona,
+                tipo_persona = p.tipo_persona,
                 nombre = p.nombre,
                 tipo_documento = p.tipo_documento,
                 num_documento = p.num_documento,

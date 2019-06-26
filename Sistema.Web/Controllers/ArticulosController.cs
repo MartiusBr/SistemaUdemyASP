@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using Sistema.Web.Models.Almacen.Articulo;
 
 namespace Sistema.Web.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class ArticulosController : ControllerBase
@@ -23,6 +25,7 @@ namespace Sistema.Web.Controllers
         }
 
         // GET: api/Articulos/Listar
+        [Authorize(Roles = "Administrador,Almacenero")]
         [HttpGet("[action]")]
         public async Task<IEnumerable<ArticuloViewModel>> Listar()
         {
@@ -44,6 +47,7 @@ namespace Sistema.Web.Controllers
         }
 
         // GET: api/Articulos/Mostrar/1
+        [Authorize(Roles = "Administrador,Almacenero")]
         [HttpGet("[action]/{id}")]
         public async Task<IActionResult> Mostrar([FromRoute] int id)
         {
@@ -71,6 +75,7 @@ namespace Sistema.Web.Controllers
         }
 
         // PUT: api/Articulos/Actualizar
+        [Authorize(Roles = "Administrador,Almacenero")]
         [HttpPut("[action]")]
         public async Task<IActionResult> Actualizar([FromBody] ActualizarViewModel model)
         {
@@ -112,6 +117,7 @@ namespace Sistema.Web.Controllers
         }
 
         // POST: api/Articulos/Crear
+        [Authorize(Roles = "Administrador,Almacenero")]
         [HttpPost("[action]")]
         public async Task<IActionResult> Crear([FromBody] CrearViewModel model)
         {
@@ -145,6 +151,7 @@ namespace Sistema.Web.Controllers
         }
 
         // PUT: api/Categorias/Desactivar/1
+        [Authorize(Roles = "Administrador,Almacenero")]
         [HttpPut("[action]/{id}")]
         public async Task<IActionResult> Desactivar([FromRoute] int id)
         {
@@ -177,6 +184,7 @@ namespace Sistema.Web.Controllers
         }
 
         // PUT: api/Articulos/Activar/1
+        [Authorize(Roles = "Administrador,Almacenero")]
         [HttpPut("[action]/{id}")]
         public async Task<IActionResult> Activar([FromRoute] int id)
         {
