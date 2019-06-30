@@ -18,6 +18,10 @@ namespace Sistema.Datos
         public DbSet<Rol> Roles { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Persona> Personas { get; set; }
+        public DbSet<Ingreso> Ingresos { get; set; }
+        public DbSet<DetalleIngreso> DetallesIngresos { get; set; }
+
+
 
         public DbContextSistema(DbContextOptions<DbContextSistema> options) : base(options)
         {
@@ -33,6 +37,9 @@ namespace Sistema.Datos
             modelBuilder.ApplyConfiguration(new RolMap());
             modelBuilder.ApplyConfiguration(new UsuarioMap());
             modelBuilder.ApplyConfiguration(new PersonaMap());
+            modelBuilder.ApplyConfiguration(new IngresoMap());
+            modelBuilder.ApplyConfiguration(new DetalleIngresoMap());
+
 
         }
     }

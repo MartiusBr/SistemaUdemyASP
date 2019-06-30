@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Sistema.Entidades.Almacen;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sistema.Entidades.Usuarios
 {
@@ -23,5 +25,6 @@ namespace Sistema.Entidades.Usuarios
         public bool condicion { get; set; }
         
         public Rol rol { get; set; }
+        public ICollection<Ingreso> ingresos { get; set; }
     }                                     
 }

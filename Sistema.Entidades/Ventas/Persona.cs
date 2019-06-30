@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Sistema.Entidades.Almacen;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sistema.Entidades.Ventas
 {
@@ -16,5 +18,6 @@ namespace Sistema.Entidades.Ventas
         public string telefono { get; set; }
         public string email { get; set; }
 
+        public ICollection<Ingreso> ingresos { get; set; }
     }
 }
