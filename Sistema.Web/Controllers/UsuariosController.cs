@@ -255,7 +255,7 @@ namespace Sistema.Web.Controllers
                 new Claim(ClaimTypes.Role, usuario.rol.nombre),
                 new Claim("idusuario", usuario.idusuario.ToString()), //Para Vue
                 new Claim("rol", usuario.rol.nombre),                 //
-                new Claim("nombre", usuario.rol.nombre),              //
+                new Claim("nombre", usuario.nombre),              //
             };
 
             return Ok(
