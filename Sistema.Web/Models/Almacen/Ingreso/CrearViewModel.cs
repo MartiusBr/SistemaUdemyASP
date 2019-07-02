@@ -24,6 +24,6 @@ namespace Sistema.Web.Models.Almacen.Ingreso
         public decimal total { get; set; }
         //Propiedades detalle
         [Required]
-        public List<DetalleViewModel> dellates { get; set; }
+        public List<DetalleViewModel> detalles { get; set; }
     }
 }

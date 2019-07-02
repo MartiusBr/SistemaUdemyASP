@@ -54,8 +54,8 @@ namespace Sistema.Web.Controllers
 
         }
 
-        // POST: api/Imgresos/Crear
-        [Authorize(Roles = "Administrador,Almacenero")]
+        // POST: api/Ingresos/Crear
+        [Authorize(Roles = "Almacenero,Administrador")]
         [HttpPost("[action]")]
         public async Task<IActionResult> Crear([FromBody] CrearViewModel model)
         {
@@ -63,21 +63,21 @@ namespace Sistema.Web.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             var fechaHora = DateTime.Now;
 
-            Ingreso ingreso = new Ingreso {
+            Ingreso ingreso = new Ingreso
+            {
                 idproveedor = model.idproveedor,
                 idusuario = model.idusuario,
                 tipo_comprobante = model.tipo_comprobante,
                 serie_comprobante = model.serie_comprobante,
                 num_comprobante = model.num_comprobante,
                 fecha_hora = fechaHora,
-                impuesto   = model.impuesto,
-                total      = model.total,
-                estado     = "Aceptado",
-                
+                impuesto = model.impuesto,
+                total = model.total,
+                estado = "Aceptado"
             };
+
 
             try
             {
@@ -85,13 +85,14 @@ namespace Sistema.Web.Controllers
                 await _context.SaveChangesAsync();
 
                 var id = ingreso.idingreso;
-                foreach (var det in model.dellates) {
-
-                    DetalleIngreso detalle = new DetalleIngreso {
-                        idingreso  = id,
+                foreach (var det in model.detalles)
+                {
+                    DetalleIngreso detalle = new DetalleIngreso
+                    {
+                        idingreso = id,
                         idarticulo = det.idarticulo,
-                        cantidad   = det.cantidad,
-                        precio     = det.precio
+                        cantidad = det.cantidad,
+                        precio = det.precio
                     };
                     _context.DetallesIngresos.Add(detalle);
                 }
@@ -99,8 +100,7 @@ namespace Sistema.Web.Controllers
             }
             catch (Exception ex)
             {
-
-                return BadRequest(ex.Message);
+                return BadRequest();
             }
 
             return Ok();
