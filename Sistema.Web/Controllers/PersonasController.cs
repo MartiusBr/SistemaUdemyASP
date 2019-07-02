@@ -66,6 +66,21 @@ namespace Sistema.Web.Controllers
 
         }
 
+        // GET: api/Personas/SelectProveedores
+        [Authorize(Roles = "Administrador,Almacenero")]
+        [HttpGet("[action]")]
+        public async Task<IEnumerable<SelectViewModel>> SelectProveedores()
+        {
+            var persona = await _context.Personas.Where(p => p.tipo_persona == "Proveedor").ToListAsync();
+
+            return persona.Select(p => new SelectViewModel
+            {
+                idpersona = p.idpersona,
+                nombre = p.nombre
+            });
+
+        }
+
         // POST: api/Personas/Crear
         [Authorize(Roles = "Administrador,Almacenero,Vendedor")]
         [HttpPost("[action]")]
@@ -149,7 +164,6 @@ namespace Sistema.Web.Controllers
 
             return Ok();
         }
-
 
 
         private bool PersonaExists(int id)
