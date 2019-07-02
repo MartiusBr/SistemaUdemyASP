@@ -46,6 +46,31 @@ namespace Sistema.Web.Controllers
 
         }
 
+        // GET: api/Articulos/ListarIngreso/texto
+        [Authorize(Roles = "Administrador,Almacenero")]
+        [HttpGet("[action]/{texto}")]
+        public async Task<IEnumerable<ArticuloViewModel>> ListarIngreso([FromRoute] string texto)
+        {
+            var articulo = await _context.Articulos.Include("categoria")
+                                    .Where(a => a.nombre.Contains(texto))      //Solo muestrame los articulos que contienen este texto que recibo en la ruta   
+                                    .Where(a => a.condicion==true)          //Y cuya condicion sea disponible
+                                    .ToListAsync();
+
+            return articulo.Select(a => new ArticuloViewModel
+            {
+                idarticulo = a.idarticulo,
+                idcategoria = a.idcategoria,
+                categoria = a.categoria.nombre,
+                codigo = a.codigo,
+                nombre = a.nombre,
+                stock = a.stock,
+                precio_venta = a.precio_venta,
+                descripcion = a.descripcion,
+                condicion = a.condicion
+            });
+
+        }
+
         // GET: api/Articulos/Mostrar/1
         [Authorize(Roles = "Administrador,Almacenero")]
         [HttpGet("[action]/{id}")]
