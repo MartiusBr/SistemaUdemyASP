@@ -19,5 +19,7 @@ namespace Sistema.Entidades.Ventas
         public string email { get; set; }
 
         public ICollection<Ingreso> ingresos { get; set; }
+        public ICollection<Venta> ventas { get; set; } //Una persona(cliente) puede tener-participar varias ventas
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Sistema.Entidades.Almacen;
+using Sistema.Entidades.Ventas;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -26,5 +27,6 @@ namespace Sistema.Entidades.Usuarios
         
         public Rol rol { get; set; }
         public ICollection<Ingreso> ingresos { get; set; }
+        public ICollection<Venta> ventas { get; set; }
     }                                     
 }
