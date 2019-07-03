@@ -54,6 +54,57 @@ namespace Sistema.Web.Controllers
 
         }
 
+        // GET: api/Ingresos/ListarFiltro/texto
+        [Authorize(Roles = "Administrador,Almacenero")]
+        [HttpGet("[action]/{texto}")]
+        public async Task<IEnumerable<IngresoViewModel>> ListarFiltro([FromRoute] string texto)
+        {
+            var ingreso = await _context.Ingresos
+                    .Include(i => i.usuario)
+                    .Include(i => i.persona)
+                    .Where(i=>i.num_comprobante.Contains(texto))
+                    .OrderByDescending(i => i.idingreso)//Obtener los mas recientes primeros
+                    .ToListAsync();
+
+            return ingreso.Select(i => new IngresoViewModel
+            {
+                idingreso = i.idingreso,
+                idproveedor = i.idproveedor,
+                proveedor = i.persona.nombre,
+                idusuario = i.idusuario,
+                usuario = i.usuario.nombre,
+                tipo_comprobante = i.tipo_comprobante,
+                serie_comprobante = i.serie_comprobante,
+                num_comprobante = i.num_comprobante,
+                fecha_hora = i.fecha_hora,
+                impuesto = i.impuesto,
+                total = i.total,
+                estado = i.estado,
+
+            });
+
+        }
+
+        // GET: api/Ingresos/ListarDetalles
+        [Authorize(Roles = "Administrador,Almacenero")]
+        [HttpGet("[action]/{idingreso}")]
+        public async Task<IEnumerable<DetalleViewModel>> ListarDetalles([FromRoute] int idingreso)
+        {
+            var detalle = await _context.DetallesIngresos
+                    .Include(a => a.articulo)
+                    .Where(d => d.idingreso == idingreso)
+                    .ToListAsync();
+
+            return detalle.Select(d => new DetalleViewModel
+            {
+                idarticulo = d.idarticulo,
+                articulo   = d.articulo.nombre,
+                cantidad   = d.cantidad,
+                precio     = d.precio
+            });
+
+        }
+
         // POST: api/Ingresos/Crear
         [Authorize(Roles = "Almacenero,Administrador")]
         [HttpPost("[action]")]
@@ -106,7 +157,38 @@ namespace Sistema.Web.Controllers
             return Ok();
         }
 
+        // PUT: api/Ingresos/Anular/1
+        [Authorize(Roles = "Administrador,Almacenero")]
+        [HttpPut("[action]/{id}")]
+        public async Task<IActionResult> Anular([FromRoute] int id)
+        {
 
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+
+            var ingreso = await _context.Ingresos.FirstOrDefaultAsync(i => i.idingreso == id);
+
+            if (ingreso == null)
+            {
+                return NotFound();
+            }
+
+            ingreso.estado = "Inactivo";
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                // Guardar Excepción
+                return BadRequest();
+            }
+
+            return Ok();
+        }
 
         private bool IngresoExists(int id)
         {

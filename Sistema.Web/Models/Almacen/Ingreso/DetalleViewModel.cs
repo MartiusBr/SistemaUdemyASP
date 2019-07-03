@@ -7,9 +7,11 @@ namespace Sistema.Web.Models.Almacen.Ingreso
     {
         [Required]
         public int idarticulo { get; set; }
+        public string articulo { get; set; }
         [Required]
         public int cantidad { get; set; }
         [Required]
         public decimal precio { get; set; }
+
     }
 }

@@ -18,5 +18,6 @@ namespace Sistema.Entidades.Almacen
         public decimal precio { get; set; }
 
         public Ingreso ingreso { get; set; }
+        public Articulo articulo { get; set; }
     }
 }
