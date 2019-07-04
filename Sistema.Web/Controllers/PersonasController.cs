@@ -81,6 +81,21 @@ namespace Sistema.Web.Controllers
 
         }
 
+        // GET: api/Personas/SelectClientes
+        [Authorize(Roles = "Administrador,Vendedor")]
+        [HttpGet("[action]")]
+        public async Task<IEnumerable<SelectViewModel>> SelectClientes()
+        {
+            var persona = await _context.Personas.Where(p => p.tipo_persona == "Cliente").ToListAsync();
+
+            return persona.Select(p => new SelectViewModel
+            {
+                idpersona = p.idpersona,
+                nombre = p.nombre
+            });
+
+        }
+
         // POST: api/Personas/Crear
         [Authorize(Roles = "Administrador,Almacenero,Vendedor")]
         [HttpPost("[action]")]
