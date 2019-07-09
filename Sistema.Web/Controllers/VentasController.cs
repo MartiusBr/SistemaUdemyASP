@@ -40,6 +40,10 @@ namespace Sistema.Web.Controllers
                 idventa = v.idventa,
                 idcliente = v.idcliente,
                 cliente = v.persona.nombre,
+                num_documento = v.persona.num_documento,
+                direccion = v.persona.direccion,
+                email = v.persona.email,
+                telefono = v.persona.telefono,
                 idusuario = v.idusuario,
                 usuario = v.usuario.nombre,
                 tipo_comprobante = v.tipo_comprobante,
@@ -54,7 +58,27 @@ namespace Sistema.Web.Controllers
 
         }
 
-        // GET: api/Ventas/ListarVentas/texto
+        // GET: api/Ventas/VentasMes12
+        [Authorize(Roles = "Administrador,Vendedor,Almacenero")]
+        [HttpGet("[action]")]
+        public async Task<IEnumerable<ConsultaViewModel>> VentasMes12()
+        {
+            var consulta = await _context.Ventas
+                    .GroupBy(v => v.fecha_hora.Month)
+                    .Select(x=> new { etiqueta = x.Key, valor=x.Sum(v=>v.total) })  //La llave -> el mes de la fecha y para valor -> campo calculado ->la suma de los totales de esa fecha                
+                    .OrderByDescending(x => x.etiqueta)//Obtener los mas recientes primeros
+                    .Take(12)
+                    .ToListAsync();
+
+            return consulta.Select(v => new ConsultaViewModel
+            {
+                etiqueta=v.etiqueta.ToString(),
+                valor=v.valor
+            });
+
+        }
+
+        // GET: api/Ventas/ListarFiltro/texto
         [Authorize(Roles = "Administrador,Vendedor")]
         [HttpGet("[action]/{texto}")]
         public async Task<IEnumerable<VentaViewModel>> ListarFiltro([FromRoute] string texto)
@@ -71,6 +95,47 @@ namespace Sistema.Web.Controllers
                 idventa = v.idventa,
                 idcliente = v.idcliente,
                 cliente = v.persona.nombre,
+                num_documento = v.persona.num_documento,
+                direccion = v.persona.direccion,
+                email = v.persona.email,
+                telefono = v.persona.telefono,
+                idusuario = v.idusuario,
+                usuario = v.usuario.nombre,
+                tipo_comprobante = v.tipo_comprobante,
+                serie_comprobante = v.serie_comprobante,
+                num_comprobante = v.num_comprobante,
+                fecha_hora = v.fecha_hora,
+                impuesto = v.impuesto,
+                total = v.total,
+                estado = v.estado,
+
+            });
+
+        }
+
+        // GET: api/Ventas/ConsultaFechas/FechaInicio/FechaFin
+        [Authorize(Roles = "Administrador,Vendedor")]
+        [HttpGet("[action]/{FechaInicio}/{FechaFin}")]
+        public async Task<IEnumerable<VentaViewModel>> ConsultaFechas([FromRoute] DateTime FechaInicio,DateTime FechaFin)
+        {
+            var venta = await _context.Ventas
+                    .Include(v => v.usuario)
+                    .Include(v => v.persona)
+                    .OrderByDescending(v => v.idventa)//Obtener los mas recientes primeros
+                    .Where(i=>i.fecha_hora>=FechaInicio)
+                    .Where(i => i.fecha_hora <= FechaFin)
+                    .Take(100)
+                    .ToListAsync();
+
+            return venta.Select(v => new VentaViewModel
+            {
+                idventa = v.idventa,
+                idcliente = v.idcliente,
+                cliente = v.persona.nombre,
+                num_documento = v.persona.num_documento,
+                direccion = v.persona.direccion,
+                email = v.persona.email,
+                telefono = v.persona.telefono,
                 idusuario = v.idusuario,
                 usuario = v.usuario.nombre,
                 tipo_comprobante = v.tipo_comprobante,
