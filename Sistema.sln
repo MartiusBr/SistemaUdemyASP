@@ -1,13 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.136
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29020.237
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sistema.Entidades", "Sistema.Entidades\Sistema.Entidades.csproj", "{53C93E8A-777F-4684-835C-135B9F1FF232}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sistema.Datos", "Sistema.Datos\Sistema.Datos.csproj", "{174414BA-C58E-42A8-BC15-6AE6F90485D1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sistema.Web", "Sistema.Web\Sistema.Web.csproj", "{E51E19E5-4F23-4C42-904F-C750EDCE5FEF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{19AA1453-A3C2-49D4-B317-D84AB1C66702}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		Dockerfile = Dockerfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
